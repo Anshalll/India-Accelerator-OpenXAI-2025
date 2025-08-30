@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Sidebar from "@/components/Sidebar";
+import {CreateMongoConnection} from '@/database/db'
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,7 +14,7 @@ export default function RootLayout({
 }>) {
 
     
-
+  CreateMongoConnection()
   return (
     <html lang="en">
       <body
