@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import {  NextResponse } from 'next/server'
 import ollama from 'ollama'
 const model = 'llama3'
 

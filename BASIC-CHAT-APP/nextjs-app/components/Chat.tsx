@@ -1,17 +1,35 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState , useEffect , useRef} from "react"
 
 export default function Chat() {
+
+    interface MessageData {
+        Message: string;
+        Type: string,
+    }
+
     const [Message, setMessage] = useState<string>("")
     const [Loading, setLoading] = useState<boolean>(false)
     const [Output, setOutput] = useState<string>("")
     const [Error, setError] = useState<string>("")
-    
+    const [ChatData, setChatData] = useState<Array<MessageData>>([])
+
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+         const scrollableDiv = document.getElementById("scrolldiv");
+        if (scrollableDiv) {
+                  scrollableDiv.scrollTop = scrollableDiv.scrollHeight;
+                  console.log(scrollableDiv.scrollHeight);
+                  
+        }
+    }, [ChatData]);
+
     const handleSendData = async () => {
         setLoading(true)
         setOutput("")
-
+        let finalMessage = "";
         const response = await fetch("http://localhost:3000/api/aichat/", {
             method: "POST",
             headers: {
@@ -20,6 +38,12 @@ export default function Chat() {
             body: JSON.stringify({ message: Message }),
         })
 
+        setChatData((prev) => [
+            ...prev,
+
+            { Message: Message, Type: "user" }
+        ]);
+        setMessage("")
         if (!response.ok) {
             setError("An error occurred!")
             setTimeout(() => setError(""), 3000)
@@ -39,13 +63,25 @@ export default function Chat() {
                     for (const line of lines) {
                         try {
                             const data = JSON.parse(line)
+                            finalMessage += data.content;
                             setOutput(prev => prev + data.content)
+
                         } catch (err) {
                             console.error("Failed to parse chunk:", err, line)
                         }
                     }
+
                 }
             }
+
+            setChatData((prev) => [
+                ...prev,
+
+                { Message: finalMessage, Type: "ai" }
+            ]);
+            setOutput("")
+
+
         }
 
         setLoading(false)
@@ -53,13 +89,25 @@ export default function Chat() {
 
     return (
 
-        <div className="flex h-[calc(100%-40px)] flex-col w-full">
-            <div className="h-[calc(100%-40px)] w-full overflow-y-auto">
+        <div className="flex h-[calc(100%-40px)] flex-col w-full p-[20px]">
+            <div ref={messagesEndRef} id="scrolldiv" className="Scroller h-[calc(100%-40px)] flex flex-col  gap-[10px] rounded-lg w-full overflow-y-auto">
+                {ChatData.map((value, index) => (
+                    <div key={index} className={`${value.Type === "ai" ? "justify-start" : "justify-end"} flex w-full  `}>
 
+                        <p className="bg-[#262929] max-w-[600px]  p-[10px] rounded-lg">{value.Message}</p>
+                    </div>
+
+                ))}
+
+                {Output.trim() !== "" && <div className={` justify-start  flex w-full  `}>
+                    <p className="bg-[#262929] max-w-[600px]  p-[10px] rounded-lg">{Output}</p>
+
+                </div>}
+                {Error && <p className="text-red-500">{Error}</p>}
             </div>
             <div className="p-[20px]">
-                {Error && <p className="text-red-500">{Error}</p>}
-                <p className="text-white whitespace-pre-wrap">{Output}</p>
+
+
 
                 <input
                     className="bg-white text-black"

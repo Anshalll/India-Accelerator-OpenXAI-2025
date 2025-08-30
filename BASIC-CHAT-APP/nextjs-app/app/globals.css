@@ -12,3 +12,7 @@ html, body {
   background-color: var(--foreground);
   color: var(--background);
 }
+
+.Scroller::-webkit-scrollbar{
+  display: none;
+}
