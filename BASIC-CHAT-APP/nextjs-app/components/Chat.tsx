@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState , useEffect , useRef} from "react"
+import React, { useState, useEffect, useRef } from "react"
 
 export default function Chat() {
 
@@ -18,11 +18,11 @@ export default function Chat() {
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-         const scrollableDiv = document.getElementById("scrolldiv");
+        const scrollableDiv = document.getElementById("scrolldiv");
         if (scrollableDiv) {
-                  scrollableDiv.scrollTop = scrollableDiv.scrollHeight;
-                  console.log(scrollableDiv.scrollHeight);
-                  
+            scrollableDiv.scrollTop = scrollableDiv.scrollHeight;
+            console.log(scrollableDiv.scrollHeight);
+
         }
     }, [ChatData]);
 
@@ -73,13 +73,26 @@ export default function Chat() {
 
                 }
             }
-
             setChatData((prev) => [
                 ...prev,
 
                 { Message: finalMessage, Type: "ai" }
             ]);
+
             setOutput("")
+
+            const postmessage = await fetch(`http://localhost:3000/api/postmessage`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ user: Message, ai: finalMessage }),
+            })
+            if (!postmessage.ok) {
+                setError("An error occured!")
+            }
+            const data_posted = await postmessage.json()
+            
 
 
         }

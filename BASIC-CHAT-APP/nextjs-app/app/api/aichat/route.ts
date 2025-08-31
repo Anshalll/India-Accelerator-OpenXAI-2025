@@ -2,6 +2,7 @@ import {  NextResponse } from 'next/server'
 import ollama from 'ollama'
 const model = 'llama3'
 
+
 export async function POST(req: Request) {
 
     try {
@@ -45,3 +46,5 @@ export async function POST(req: Request) {
 
 
 }
+
+
