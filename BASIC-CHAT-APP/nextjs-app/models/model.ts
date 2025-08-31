@@ -12,12 +12,29 @@ const Bots = new mongoose.Schema({
   name: String,
   desc: String,
   image: String,
-  
+  uniqueid: String,
+  role: String,
+  createdby: {
+    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Register'
+  },
 });
 
 const Chatmodel = new mongoose.Schema({
   usermessage: String,
   aimessage: String,
+  uid: {
+    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Register'
+  },
+  belongsto: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Bot'
+
+  },
+
   timestamp: {
     type: Date,
     default: Date.now,

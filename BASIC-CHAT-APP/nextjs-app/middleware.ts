@@ -25,5 +25,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/chat/:path*", "/createbot/:path*" , "/api/postmessage/:path*"],
+  matcher: [ "/home", "/chat/:path*", "/createbot/:path*" , "/api/postmessage/:path*"],
 };
