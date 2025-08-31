@@ -10,7 +10,7 @@ export async function middleware(req: NextRequest) {
     if (!token) {
       return NextResponse.redirect(new URL("/login", req.url));
     }
-
+    
     try {
   
       await jwtVerify(token, SECRET);
@@ -25,5 +25,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/chat/:path*", "/api/postmessage/:path*"],
+  matcher: ["/chat/:path*", "/createbot/:path*" , "/api/postmessage/:path*"],
 };

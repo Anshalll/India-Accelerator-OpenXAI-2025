@@ -11,6 +11,8 @@ const Registers = new mongoose.Schema({
 const Bots = new mongoose.Schema({
   name: String,
   desc: String,
+  image: String,
+  
 });
 
 const Chatmodel = new mongoose.Schema({
